@@ -2,7 +2,7 @@
 
 ## Descripción del Proyecto
 
-Este proyecto de Data Science se enfoca en el análisis y predicción del **Customer Churn** (abandono de clientes) en el sector retail online. El objetivo principal es identificar patrones de comportamiento que permitan predecir qué clientes tienen mayor probabilidad de abandonar el servicio, permitiendo implementar estrategias de retención proactivas.
+Este proyecto de Data Science se enfoca en el análisis y predicción del **Customer Churn** (abandono de clientes) en el sector de e-commerce. El objetivo principal es identificar patrones de comportamiento que permitan predecir qué clientes tienen mayor probabilidad de abandonar el servicio, permitiendo implementar estrategias de retención proactivas.
 
 ## Estructura del Proyecto
 
@@ -10,22 +10,22 @@ Este proyecto de Data Science se enfoca en el análisis y predicción del **Cust
 S11-25-Equipo-70-DataScience/
 │
 ├── datos/
-│   ├── online_retail_customer_churn.csv    # Dataset original (1000 registros)
-│   └── dataset_retail_limpio.csv           # Dataset procesado y limpio
+│   ├── data_ecommerce_customer_churn.csv   # Dataset original
+│   └── dataset_ecommerce_limpio.csv        # Dataset procesado y limpio
 │
 ├── EDA/
-│   └── etapa_EDA.ipynb                     # Notebook con análisis exploratorio
+│   └── etapa_EDA_segundoDataset.ipynb      # Notebook con análisis exploratorio
 │
-├── image.png                                # Matriz de correlaciones
+├── final_model.sav                          # Modelo entrenado
 └── README.md                                # Documentación del proyecto
 ```
 
 ## Dataset
 
 ### Información General
-- **Tamaño**: 1,000 registros de clientes
-- **Fuente**: `online_retail_customer_churn.csv`
-- **Valores nulos**: No se encontraron valores nulos en el dataset
+- **Tamaño**: Dataset de clientes de e-commerce
+- **Fuente**: `data_ecommerce_customer_churn.csv`
+- **Valores nulos**: Se encontraron valores nulos en Antiguedad, Distancia_Almacen y Dias_Ultima_Compra
 - **Duplicados**: No se encontraron registros duplicados
 
 ### Variables del Dataset
@@ -34,25 +34,22 @@ S11-25-Equipo-70-DataScience/
 
 | Variable | Descripción | Transformaciones Aplicadas |
 |----------|-------------|---------------------------|
-| `Edad` | Edad del cliente | - |
-| `Ingreso_Anual` | Ingresos anuales del cliente | Escalado x1000 |
-| `Total_Gastado` | Monto total gastado por el cliente | - |
-| `Numeros_Compras` | Cantidad total de compras realizadas | - |
-| `Importe_Promedio_Transaccion` | Valor promedio por transacción | - |
-| `Numero_de_Devoluciones` | Cantidad de productos devueltos | - |
-| `Cantidad_de_Contactos_Soporte` | Número de contactos con soporte | - |
-| `Anios_como_cliente` | Años de antigüedad como cliente | - |
-| `Ultimo_dia_compra` | Días transcurridos desde la última compra | - |
-| `Nivel_Satisfaccion` | Puntuación de satisfacción del cliente | - |
+| `Antiguedad` (Tenure) | Tiempo como cliente | Imputación de nulos con mediana |
+| `Distancia_Almacen` (WarehouseToHome) | Distancia del almacén al hogar | Imputación de nulos con mediana |
+| `Numero_Dispositivos` (NumberOfDeviceRegistered) | Cantidad de dispositivos registrados | - |
+| `Nivel_Satisfaccion` (SatisfactionScore) | Puntuación de satisfacción del cliente | - |
+| `Numero_Direcciones` (NumberOfAddress) | Cantidad de direcciones registradas | - |
+| `Dias_Ultima_Compra` (DaySinceLastOrder) | Días transcurridos desde la última compra | Imputación de nulos con mediana |
+| `Monto_Cashback` (CashbackAmount) | Monto de cashback recibido | - |
 
 #### Variables Categóricas
 
 | Variable | Descripción | Valores | Transformaciones |
 |----------|-------------|---------|------------------|
-| `Genero` | Género del cliente | Male, Female, Other | Convertido a minúsculas |
-| `Esta_Suscripto_via_Email` | Suscripción a emails | True/False | Convertido a int (0/1) |
-| `Respuesta_a_Promocion` | Respuesta a promociones | Responded/Ignored | Convertido a minúsculas |
-| `Target` | Variable objetivo - Churn | True/False | Convertido a int (0/1) |
+| `Estado_Civil` (MaritalStatus) | Estado civil del cliente | Variados | Convertido a string y minúsculas |
+| `Categoria_Preferida` (PreferedOrderCat) | Categoría de producto preferida | Variadas categorías | Convertido a string y minúsculas |
+| `Queja` (Complain) | Si el cliente presentó quejas | 0/1 | Convertido a int |
+| `Target` (Churn) | Variable objetivo - Abandono | 0/1 | Convertido a int |
 
 ## Análisis Exploratorio de Datos (EDA)
 
@@ -65,49 +62,62 @@ S11-25-Equipo-70-DataScience/
 ### Proceso de Limpieza de Datos
 
 1. **Renombramiento de Variables**
-   - Todas las variables fueron traducidas al español para mejor comprensión
-   - Se mantuvieron nombres descriptivos y claros
+   - Tenure → Antiguedad
+   - WarehouseToHome → Distancia_Almacen
+   - NumberOfDeviceRegistered → Numero_Dispositivos
+   - PreferedOrderCat → Categoria_Preferida
+   - SatisfactionScore → Nivel_Satisfaccion
+   - MaritalStatus → Estado_Civil
+   - NumberOfAddress → Numero_Direcciones
+   - Complain → Queja
+   - DaySinceLastOrder → Dias_Ultima_Compra
+   - CashbackAmount → Monto_Cashback
+   - Churn → Target
 
 2. **Conversión de Tipos de Datos**
-   - Variables categóricas convertidas a string y normalizadas a minúsculas
-   - Variables booleanas convertidas a enteros (0/1)
+   - Variables categóricas (Estado_Civil, Categoria_Preferida) convertidas a string y normalizadas a minúsculas
+   - Variables binarias (Queja, Target) convertidas a enteros (0/1)
 
-3. **Escalado de Variables**
-   - `Ingreso_Anual` multiplicado por 1000 para representar valores reales en unidades monetarias
+3. **Tratamiento de Valores Nulos**
+   - `Antiguedad`: Imputación con mediana
+   - `Distancia_Almacen`: Imputación con mediana
+   - `Dias_Ultima_Compra`: Imputación con mediana
+   - Se utilizó la mediana por ser menos sensible a outliers
 
 4. **Validación de Calidad**
-   - Verificación de valores nulos: Sin valores nulos
+   - Verificación de valores nulos: Imputados correctamente
    - Verificación de duplicados: Sin duplicados
 
 ### Análisis Univariado
 
 Se realizó análisis de las siguientes variables de comportamiento clave:
-- Número de compras
-- Importe promedio de transacción
-- Días desde última compra
-- Contactos con soporte
-- Número de devoluciones
-- Total gastado
-- Años como cliente
-- Suscripción vía email
+- Antiguedad
+- Distancia_Almacen
+- Numero_Dispositivos
+- Nivel_Satisfaccion
+- Numero_Direcciones
+- Queja
+- Dias_Ultima_Compra
+- Monto_Cashback
 - Target (Churn)
 
 **Visualizaciones generadas:**
-- Histogramas con KDE para distribuciones
+- Histogramas con KDE para distribuciones de variables numéricas
 - Boxplots para identificación de outliers
-- Gráficos de conteo para variables categóricas
+- Gráficos de conteo para variables categóricas (Categoria_Preferida, Estado_Civil)
 
 ### Análisis de Correlaciones
 
 Se generó una matriz de correlaciones para identificar relaciones entre variables de comportamiento y la variable objetivo (Target).
 
-![Matriz de Correlaciones](image.png)
+**Variables con mayor correlación positiva al Churn:**
+1. **Queja** (0.25): Los clientes que presentan quejas tienen significativamente mayor probabilidad de abandonar
+2. **Dias_Ultima_Compra** (0.09): Mayor tiempo sin comprar aumenta el riesgo de churn
 
-**Variables con mayor correlación al Churn:**
-- Comportamiento de compra
-- Satisfacción del cliente
-- Interacciones con soporte
-- Frecuencia de devoluciones
+**Variables con correlación negativa al Churn:**
+1. **Antiguedad** (-0.35): Clientes nuevos (baja antigüedad) tienen mayor riesgo de churn
+2. **Nivel_Satisfaccion** (-0.03): Menor satisfacción está asociada con mayor churn
+3. **Monto_Cashback** (-0.16): Menor cashback recibido se asocia con mayor abandono
 
 ## Tecnologías y Herramientas
 
@@ -118,12 +128,58 @@ Se generó una matriz de correlaciones para identificar relaciones entre variabl
 - **Matplotlib** - Visualizaciones
 - **Seaborn** - Visualizaciones estadísticas
 
+## Análisis Bivariado
+
+### Churn por Variables Categóricas
+
+1. **Distribución de Churn**
+   - Se generaron gráficos de conteo y porcentaje de churn
+   - Análisis de tasa de churn por categoría preferida
+   - Análisis de tasa de churn por estado civil
+
+2. **Impacto de Quejas**
+   - Los clientes con quejas muestran una tasa de churn significativamente mayor
+   - Se generaron visualizaciones comparativas de churn según presencia de quejas
+
+### Churn por Variables Numéricas
+
+1. **Boxplots Comparativos**
+   - Se compararon todas las variables numéricas según la presencia de churn
+   - Variables analizadas: Antiguedad, Distancia_Almacen, Numero_Dispositivos, Nivel_Satisfaccion, Dias_Ultima_Compra, Monto_Cashback
+
+2. **Distribuciones Superpuestas**
+   - Antigüedad: Clientes con menor antigüedad muestran mayor churn
+   - Nivel de Satisfacción: Distribución más baja en clientes que abandonan
+   - Días desde última compra: Mayor inactividad correlaciona con churn
+
+3. **Estadísticas Descriptivas**
+   - Se calcularon estadísticas por grupo de churn para identificar diferencias significativas
+
+## Principales Hallazgos
+
+### Variables más Correlacionadas con Churn:
+1. **Queja**: Los clientes que presentan quejas tienen mayor probabilidad de abandonar
+2. **Antigüedad**: Clientes nuevos (baja antigüedad) tienen mayor riesgo de churn
+3. **Días desde última compra**: Mayor tiempo sin comprar aumenta el riesgo
+4. **Nivel de Satisfacción**: Menor satisfacción está asociada con mayor churn
+5. **Monto Cashback**: Menor cashback recibido se asocia con mayor abandono
+
+### Recomendaciones para el Modelo:
+- Priorizar variables: Queja, Antiguedad, Nivel_Satisfaccion, Dias_Ultima_Compra
+- Considerar ingeniería de features con Categoria_Preferida y Estado_Civil
+- Evaluar balanceo de clases para Target
+- Analizar interacciones entre Queja y otras variables de satisfacción
+
 ## Resultados Principales
 
-1. **Dataset Limpio**: Se generó un dataset procesado (`dataset_retail_limpio.csv`) listo para modelado
+1. **Dataset Limpio**: Se generó un dataset procesado (`dataset_ecommerce_limpio.csv`) listo para modelado
 2. **Variables Identificadas**: Se identificaron las variables más relevantes para predicción de churn
 3. **Insights de Comportamiento**: Se documentaron patrones de comportamiento asociados al abandono de clientes
-4. **Visualizaciones**: Se crearon visualizaciones para entender distribuciones y correlaciones
+4. **Visualizaciones Completas**: 
+   - Análisis univariado de todas las variables
+   - Análisis bivariado de variables vs churn
+   - Matriz de correlaciones
+   - Distribuciones superpuestas por grupo de churn
 
 ## Próximos Pasos
 
@@ -149,9 +205,10 @@ NoCountry - S11-25
 
 ## Notas Adicionales
 
-- El dataset limpio se encuentra comentado en el notebook para evitar sobrescrituras accidentales
-- Se recomienda revisar el notebook `etapa_EDA.ipynb` para análisis detallado
+- El dataset limpio se guardó como `dataset_ecommerce_limpio.csv` en la carpeta datos/
+- Se recomienda revisar el notebook `etapa_EDA_segundoDataset.ipynb` para análisis detallado y visualizaciones
 - Las transformaciones aplicadas son reversibles para análisis posteriores
+- Se utilizó imputación con mediana para valores nulos por su robustez ante outliers
 
 ---
 
