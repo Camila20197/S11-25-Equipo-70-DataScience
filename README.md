@@ -76,8 +76,8 @@ S11-25-Equipo-70-DataScience/
    - `Ingreso_Anual` multiplicado por 1000 para representar valores reales en unidades monetarias
 
 4. **Validación de Calidad**
-   - Verificación de valores nulos: ✅ Sin valores nulos
-   - Verificación de duplicados: ✅ Sin duplicados
+   - Verificación de valores nulos: Sin valores nulos
+   - Verificación de duplicados: Sin duplicados
 
 ### Análisis Univariado
 
