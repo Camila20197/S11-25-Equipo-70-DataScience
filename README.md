@@ -14,7 +14,8 @@ S11-25-Equipo-70-DataScience/
 │   └── dataset_ecommerce_limpio.csv        # Dataset procesado y limpio
 │
 ├── EDA/
-│   └── etapa_EDA_segundoDataset.ipynb      # Notebook con análisis exploratorio
+│   ├── etapa_EDA_segundoDataset.ipynb      # Notebook con análisis exploratorio
+│   └── definicion_churn.ipynb              # Análisis y definición de churn
 │
 ├── final_model.sav                          # Modelo entrenado
 └── README.md                                # Documentación del proyecto
@@ -199,6 +200,32 @@ Se realizó una reducción de dimensionalidad a 2 componentes para visualizar la
    - Análisis bivariado de variables vs churn
    - Matriz de correlaciones
    - Distribuciones superpuestas por grupo de churn
+
+## Definición de Churn y Segmentación de Riesgo
+
+Se realizó un análisis profundo en el notebook `definicion_churn.ipynb` para redefinir y entender el comportamiento de abandono.
+
+### Hallazgos Clave
+- **El Churn NO es por inactividad**: La media de días desde la última compra es baja (~4.5 días). El abandono suele ocurrir poco después de una compra, sugiriendo insatisfacción reciente.
+- **Factores de Riesgo**:
+  - **Quejas**: Triplican la probabilidad de churn.
+  - **Nuevos Clientes**: Aquellos con < 5 meses de antigüedad tienen 5.5x más riesgo.
+  - **Combinación Crítica**: Clientes nuevos con quejas tienen una tasa de churn > 60%.
+
+### Nuevas Definiciones Operativas
+Se proponen tres niveles de segmentación para la gestión de clientes:
+
+1. **Definición A: Churn Explícito (Target)**
+   - **Criterio**: `Target == 1` (17.1% de la base)
+   - **Uso**: Entrenamiento de modelos predictivos.
+
+2. **Definición B: Alto Riesgo (Alerta Temprana)**
+   - **Criterio**: `(Queja == 1) & (Antiguedad < 5)` (10.4% de la base)
+   - **Acción**: Intervención inmediata por Customer Success.
+
+3. **Definición C: Inactividad Atípica**
+   - **Criterio**: `Dias_Ultima_Compra > 15` (0.8% de la base)
+   - **Acción**: Campañas de reactivación (el 99% de clientes compra antes de 15 días).
 
 ## Recomendación de Modelos
 Basado en el EDA (no normalidad, presencia de outliers, no linealidad), se sugieren los siguientes modelos:
