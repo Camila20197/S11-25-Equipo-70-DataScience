@@ -106,6 +106,19 @@ Se realizó análisis de las siguientes variables de comportamiento clave:
 - Boxplots para identificación de outliers
 - Gráficos de conteo para variables categóricas (Categoria_Preferida, Estado_Civil)
 
+### Pruebas de Normalidad
+Se aplicó la prueba de Kolmogorov-Smirnov para evaluar la distribución de las variables numéricas.
+- **Resultado**: Todas las variables numéricas mostraron un p-valor < 0.05.
+- **Conclusión**: Se rechaza la hipótesis nula de normalidad. Ninguna variable numérica sigue una distribución normal, lo que sugiere el uso de modelos no paramétricos o transformaciones previas.
+
+### Detección de Outliers
+Se analizaron los valores atípicos utilizando el Rango Intercuartílico (IQR) y Isolation Forest.
+- **Numero_Dispositivos**: 6.8% de outliers.
+- **Monto_Cashback**: 8% de outliers.
+- **Distancia_Almacen**: 0.35% de outliers.
+- **Dias_Ultima_Compra**: 0.5% de outliers.
+- **Multivariado**: Se detectaron 15 outliers multivariados mediante Isolation Forest.
+
 ### Análisis de Correlaciones
 
 Se generó una matriz de correlaciones para identificar relaciones entre variables de comportamiento y la variable objetivo (Target).
@@ -118,6 +131,12 @@ Se generó una matriz de correlaciones para identificar relaciones entre variabl
 1. **Antiguedad** (-0.35): Clientes nuevos (baja antigüedad) tienen mayor riesgo de churn
 2. **Nivel_Satisfaccion** (-0.03): Menor satisfacción está asociada con mayor churn
 3. **Monto_Cashback** (-0.16): Menor cashback recibido se asocia con mayor abandono
+
+### Análisis de Componentes Principales (PCA)
+Se realizó una reducción de dimensionalidad a 2 componentes para visualizar la separabilidad de las clases.
+- **Varianza Explicada**: Las 2 primeras componentes explican aproximadamente el 50% de la varianza.
+- **Observación**: Las clases "Churn" y "No Churn" se encuentran mezcladas en el espacio proyectado.
+- **Conclusión**: El problema no es linealmente separable en bajas dimensiones, lo que descarta modelos lineales simples sin ingeniería de características avanzada.
 
 ## Tecnologías y Herramientas
 
@@ -180,6 +199,18 @@ Se generó una matriz de correlaciones para identificar relaciones entre variabl
    - Análisis bivariado de variables vs churn
    - Matriz de correlaciones
    - Distribuciones superpuestas por grupo de churn
+
+## Recomendación de Modelos
+Basado en el EDA (no normalidad, presencia de outliers, no linealidad), se sugieren los siguientes modelos:
+
+### Recomendados
+1. **XGBoost / LightGBM**: Manejan bien datos no lineales, outliers y valores faltantes. Alto rendimiento en datos tabulares.
+2. **Random Forest**: Robusto ante outliers y no requiere normalización. Captura relaciones no lineales.
+3. **KNN (K-Nearest Neighbors)**: No asume normalidad (no paramétrico). Requiere escalado de datos.
+4. **SVM (Support Vector Machines)**: Con kernel RBF para manejar la no linealidad.
+
+### No Recomendados
+- **Regresión Logística / LDA / Naive Bayes**: Asumen normalidad o separabilidad lineal, supuestos que no se cumplen en este dataset.
 
 ## Próximos Pasos
 
