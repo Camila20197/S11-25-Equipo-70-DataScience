@@ -284,7 +284,7 @@ El modelo alcanzó una **Exactitud (Accuracy) global del 90%**.
 
 **Equipo 70 - Data Science**  
 NoCountry - S11-25  
-[Repositorio en GitHub](https://github.com/Camila20197/S11-25-Equipo-70-DataScience)fusión
+[Repositorio en GitHub](https://github.com/Camila20197/S11-25-Equipo-70-DataScience)
    - Análisis de importancia de variables
 
 ## Equipo
