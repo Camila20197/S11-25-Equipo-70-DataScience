@@ -124,6 +124,8 @@ Se analizaron los valores atípicos utilizando el Rango Intercuartílico (IQR) y
 
 Se generó una matriz de correlaciones para identificar relaciones entre variables de comportamiento y la variable objetivo (Target).
 
+![Matriz de Correlaciones](correlation_matrix.png)
+
 **Variables con mayor correlación positiva al Churn:**
 1. **Queja** (0.25): Los clientes que presentan quejas tienen significativamente mayor probabilidad de abandonar
 2. **Dias_Ultima_Compra** (0.09): Mayor tiempo sin comprar aumenta el riesgo de churn
@@ -135,10 +137,10 @@ Se generó una matriz de correlaciones para identificar relaciones entre variabl
 
 ### Análisis de Componentes Principales (PCA)
 Se realizó una reducción de dimensionalidad a 2 componentes para visualizar la separabilidad de las clases.
-- **Varianza Explicada**: Las 2 primeras componentes explican aproximadamente el 50% de la varianza.
-- **Observación**: Las clases "Churn" y "No Churn" se encuentran mezcladas en el espacio proyectado.
-- **Conclusión**: El problema no es linealmente separable en bajas dimensiones, lo que descarta modelos lineales simples sin ingeniería de características avanzada.
 
+![Visualización PCA](pca_visualization.png)
+
+- **Varianza Explicada**: Las 2 primeras componentes explican aproximadamente el 50% de la varianza.
 ## Tecnologías y Herramientas
 
 - **Python 3.x**
@@ -146,6 +148,11 @@ Se realizó una reducción de dimensionalidad a 2 componentes para visualizar la
 - **Pandas** - Manipulación de datos
 - **NumPy** - Cálculos numéricos
 - **Matplotlib** - Visualizaciones
+- **Seaborn** - Visualizaciones estadísticas
+- **Scikit-learn** - Modelado y evaluación
+- **XGBoost** - Implementación del modelo
+
+## Análisis Bivariadosualizaciones
 - **Seaborn** - Visualizaciones estadísticas
 
 ## Análisis Bivariado
@@ -239,21 +246,47 @@ Basado en el EDA (no normalidad, presencia de outliers, no linealidad), se sugie
 ### No Recomendados
 - **Regresión Logística / LDA / Naive Bayes**: Asumen normalidad o separabilidad lineal, supuestos que no se cumplen en este dataset.
 
+## Resultados del Modelado
+
+Se implementó y optimizó un modelo de **XGBoost Classifier** utilizando `RandomizedSearchCV` para el ajuste de hiperparámetros, priorizando la métrica **F1-Score** debido al desbalance de clases.
+
+### Configuración del Modelo
+- **Algoritmo**: XGBoost
+- **Estrategia de Balanceo**: `scale_pos_weight` (~4.84) para compensar la clase minoritaria (Churn).
+- **Mejores Hiperparámetros**:
+  - `n_estimators`: 463
+  - `max_depth`: 5
+  - `learning_rate`: ~0.205
+  - `subsample`: ~0.81
+  - `colsample_bytree`: ~0.76
+
+### Métricas de Desempeño (Test Set)
+El modelo alcanzó una **Exactitud (Accuracy) global del 90%**.
+
+| **0 (No Churn)** | 0.95 | 0.93 | 0.94 | 651 |
+| **1 (Churn)** | 0.68 | 0.75 | 0.71 | 135 |
+
+### Matriz de Confusión
+
+![Matriz de Confusión](confusion_matrix.png)
+
+### Análisis de Resultados
 ## Próximos Pasos
 
-1. **Modelado Predictivo**
-   - Implementar modelos de Machine Learning (Logistic Regression, Random Forest, XGBoost)
-   - Realizar validación cruzada
-   - Optimizar hiperparámetros
+1. **Despliegue y Monitoreo**
+   - Integrar el modelo `final_model.sav` en un pipeline de producción para predicciones en tiempo real o batch.
+   - Implementar un sistema de monitoreo para detectar *data drift* (cambios en el comportamiento de los clientes) y *model drift* (degradación del rendimiento del modelo).
 
-2. **Feature Engineering**
-   - Crear nuevas variables derivadas
-   - Aplicar técnicas de encoding para variables categóricas
-   - Normalizar/estandarizar variables numéricas
+2. **Mejora Continua**
+   - Evaluar modelos de ensamble (Stacking) para intentar mejorar la precisión en la clasificación de churn.
+   - Realizar un análisis de impacto financiero de las estrategias de retención basadas en las predicciones del modelo para cuantificar el ROI.
+   - Recolectar nuevas variables que puedan enriquecer el modelo, como datos de navegación en el sitio web o interacciones con campañas de marketing.
 
-3. **Evaluación de Modelos**
-   - Métricas: Accuracy, Precision, Recall, F1-Score, AUC-ROC
-   - Matriz de confusión
+## Equipo
+
+**Equipo 70 - Data Science**  
+NoCountry - S11-25  
+[Repositorio en GitHub](https://github.com/Camila20197/S11-25-Equipo-70-DataScience)fusión
    - Análisis de importancia de variables
 
 ## Equipo
