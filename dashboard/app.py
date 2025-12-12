@@ -950,7 +950,7 @@ elif "6. Recomendaciones" in menu:
 elif "7. Predicción" in menu:
     st.markdown('<div class="main-header">Predicción de Fuga en Tiempo Real</div>', unsafe_allow_html=True)
     st.markdown("### Predice si un cliente abandonará la empresa")
-    st.info("Ingresa los datos del cliente para obtener una predicción instantánea basada en nuestro modelo de Inteligencia Artificial (KNN).")
+    st.info("Ingresa los datos del cliente para obtener una predicción instantánea basada en nuestro MODELO PREDICTIVO (KNN).")
 
     col_input1, col_input2 = st.columns(2)
 
