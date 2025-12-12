@@ -137,7 +137,7 @@ Se analizaron los valores atípicos utilizando el Rango Intercuartílico (IQR) y
 
 Se generó una matriz de correlaciones para identificar relaciones entre variables de comportamiento y la variable objetivo (Target).
 
-![Matriz de Correlaciones](image.png)
+![Matriz de Correlaciones]
 
 **Variables con mayor correlación positiva al Churn:**
 1. **Queja** (0.25): Los clientes que presentan quejas tienen significativamente mayor probabilidad de abandonar
@@ -151,7 +151,7 @@ Se generó una matriz de correlaciones para identificar relaciones entre variabl
 ### Análisis de Componentes Principales (PCA)
 Se realizó una reducción de dimensionalidad a 2 componentes para visualizar la separabilidad de las clases.
 
-![Visualización PCA](graficos/graph2.png)
+![Visualización PCA]
 
 - **Varianza Explicada**: Las 2 primeras componentes explican aproximadamente el 50% de la varianza.
 - **Observación**: Las clases "Churn" y "No Churn" se encuentran mezcladas en el espacio proyectado.
@@ -285,7 +285,7 @@ El modelo alcanzó una **Exactitud (Accuracy) global del 90%**.
 
 ### Matriz de Confusión
 
-![Matriz de Confusión](graficos/confusion_matrix.png)
+![Matriz de Confusión]
 
 ### Análisis de Resultados
 - **Detección de Churn (Recall)**: El modelo logra identificar correctamente al **75%** de los clientes que van a abandonar.
