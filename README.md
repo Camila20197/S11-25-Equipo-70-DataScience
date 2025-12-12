@@ -17,7 +17,20 @@ S11-25-Equipo-70-DataScience/
 │   ├── etapa_EDA_segundoDataset.ipynb      # Notebook con análisis exploratorio
 │   └── definicion_churn.ipynb              # Análisis y definición de churn
 │
-├── final_model.sav                          # Modelo entrenado
+├── modelos/
+│   ├── modelos_XGBoost.ipynb               # Notebook del modelo XGBoost
+│   └── Modelo_k_Nearest_Neighbors.ipynb    # Notebook del modelo KNN
+│
+├── graficos/
+│   ├── graph2.png                          # Visualizaciones generadas
+│   └── hist1.png                           # Histogramas
+│
+├── app.py                                   # Dashboard interactivo (Streamlit)
+├── final_model.sav                          # Modelo XGBoost entrenado
+├── modelo_knn_churn_final.pkl              # Modelo KNN entrenado
+├── scaler_knn_churn.pkl                    # Scaler para el modelo KNN
+├── umbral_optimo_knn.pkl                   # Umbral óptimo para KNN
+├── features_knn_churn.pkl                  # Features usados en KNN
 └── README.md                                # Documentación del proyecto
 ```
 
@@ -124,7 +137,8 @@ Se analizaron los valores atípicos utilizando el Rango Intercuartílico (IQR) y
 
 Se generó una matriz de correlaciones para identificar relaciones entre variables de comportamiento y la variable objetivo (Target).
 
-![Matriz de Correlaciones]
+![Matriz de Correlaciones](image.png)
+
 **Variables con mayor correlación positiva al Churn:**
 1. **Queja** (0.25): Los clientes que presentan quejas tienen significativamente mayor probabilidad de abandonar
 2. **Dias_Ultima_Compra** (0.09): Mayor tiempo sin comprar aumenta el riesgo de churn
@@ -137,8 +151,11 @@ Se generó una matriz de correlaciones para identificar relaciones entre variabl
 ### Análisis de Componentes Principales (PCA)
 Se realizó una reducción de dimensionalidad a 2 componentes para visualizar la separabilidad de las clases.
 
-![Visualización PCA]
+![Visualización PCA](graficos/graph2.png)
+
 - **Varianza Explicada**: Las 2 primeras componentes explican aproximadamente el 50% de la varianza.
+- **Observación**: Las clases "Churn" y "No Churn" se encuentran mezcladas en el espacio proyectado.
+- **Conclusión**: El problema no es linealmente separable en bajas dimensiones, lo que descarta modelos lineales simples sin ingeniería de características avanzada.
 ## Tecnologías y Herramientas
 
 - **Python 3.x**
@@ -148,10 +165,9 @@ Se realizó una reducción de dimensionalidad a 2 componentes para visualizar la
 - **Matplotlib** - Visualizaciones
 - **Seaborn** - Visualizaciones estadísticas
 - **Scikit-learn** - Modelado y evaluación
-- **XGBoost** - Implementación del modelo
-
-## Análisis Bivariadosualizaciones
-- **Seaborn** - Visualizaciones estadísticas
+- **XGBoost** - Modelo de gradient boosting
+- **Streamlit** - Dashboard interactivo
+- **Joblib** - Serialización de modelos
 
 ## Análisis Bivariado
 
@@ -246,7 +262,10 @@ Basado en el EDA (no normalidad, presencia de outliers, no linealidad), se sugie
 
 ## Resultados del Modelado
 
-Se implementó y optimizó un modelo de **XGBoost Classifier** utilizando `RandomizedSearchCV` para el ajuste de hiperparámetros, priorizando la métrica **F1-Score** debido al desbalance de clases.
+Se implementaron y evaluaron dos modelos de Machine Learning para la predicción de churn:
+
+### Modelo 1: XGBoost Classifier
+Se optimizó utilizando `RandomizedSearchCV` para el ajuste de hiperparámetros, priorizando la métrica **F1-Score** debido al desbalance de clases.
 
 ### Configuración del Modelo
 - **Algoritmo**: XGBoost
@@ -266,9 +285,45 @@ El modelo alcanzó una **Exactitud (Accuracy) global del 90%**.
 
 ### Matriz de Confusión
 
-![Matriz de Confusión]
+![Matriz de Confusión](graficos/confusion_matrix.png)
 
 ### Análisis de Resultados
+- **Detección de Churn (Recall)**: El modelo logra identificar correctamente al **75%** de los clientes que van a abandonar.
+- **Precisión**: De los clientes identificados como riesgo de churn, el **68%** realmente abandonó.
+- **Estabilidad**: El modelo muestra un rendimiento robusto sin sobreajuste excesivo.
+
+### Modelo 2: K-Nearest Neighbors (KNN)
+Se implementó un modelo KNN con optimización de umbral para mejorar el recall en la clase minoritaria.
+
+**Configuración del Modelo KNN:**
+- **Algoritmo**: KNN con escalado de datos
+- **Variables Derivadas**: Se crearon features adicionales como `Es_Nuevo`, `Tiene_Queja`, `Alto_Riesgo`, `Satisfaccion_Baja`
+- **Optimización**: Búsqueda del umbral óptimo para maximizar detección de churn
+
+**Métricas de Desempeño KNN:**
+- Se utilizó Permutation Importance para identificar las variables más relevantes
+- El modelo permite segmentación interactiva por diferentes variables
+
+## Dashboard Interactivo (Streamlit)
+
+Se desarrolló una aplicación web interactiva para visualizar y explorar los resultados del modelo.
+
+### Características del Dashboard:
+- **Métricas principales**: Tasa global de churn, Accuracy, ROC-AUC, Precisión, Recall, F1-Score
+- **Matriz de confusión**: Visualización de las predicciones vs valores reales
+- **Segmentación dinámica**: Análisis de tasa de churn por:
+  - Nivel de Satisfacción
+  - Antigüedad del cliente
+  - Distancia al Almacén
+  - Número de Dispositivos
+  - Monto de Cashback
+- **Importancia de Variables**: Gráfico de Permutation Importance
+
+### Ejecución del Dashboard:
+```bash
+streamlit run app.py
+```
+
 ## Próximos Pasos
 
 1. **Despliegue y Monitoreo**
@@ -285,20 +340,16 @@ El modelo alcanzó una **Exactitud (Accuracy) global del 90%**.
 **Equipo 70 - Data Science**  
 NoCountry - S11-25  
 [Repositorio en GitHub](https://github.com/Camila20197/S11-25-Equipo-70-DataScience)
-   - Análisis de importancia de variables
-
-## Equipo
-
-**Equipo 70 - Data Science**  
-NoCountry - S11-25
 
 ## Notas Adicionales
 
 - El dataset limpio se guardó como `dataset_ecommerce_limpio.csv` en la carpeta datos/
 - Se recomienda revisar el notebook `etapa_EDA_segundoDataset.ipynb` para análisis detallado y visualizaciones
+- Los modelos entrenados están disponibles como archivos `.sav` y `.pkl`
+- El dashboard de Streamlit permite exploración interactiva de los resultados
 - Las transformaciones aplicadas son reversibles para análisis posteriores
 - Se utilizó imputación con mediana para valores nulos por su robustez ante outliers
 
 ---
 
-*Última actualización: Noviembre 2025*
+*Última actualización: Diciembre 2025*
