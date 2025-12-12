@@ -9,29 +9,30 @@ Este proyecto de Data Science se enfoca en el análisis y predicción del **Cust
 ```
 S11-25-Equipo-70-DataScience/
 │
-├── datos/
-│   ├── data_ecommerce_customer_churn.csv   # Dataset original
-│   └── dataset_ecommerce_limpio.csv        # Dataset procesado y limpio
+├── dashboard/                     # Aplicación Principal y Lógica de Negocio
+│   ├── app.py                     # Dashboard interactivo (Streamlit) principal
+│   ├── generate_models.py         # Script para entrenamiento y generación de modelos
+│   ├── test_logic.py              # Lógica de pruebas unitarias
+│   ├── comprehensive_test.py      # Script de pruebas de integración del sistema
+│   ├── requirements.txt           # Dependencias específicas del dashboard
+│   ├── logo.png                   # Recursos gráficos del dashboard
+│   └── *.pkl                      # Archivos serializados (modelos, scalers, etc.)
 │
-├── EDA/
-│   ├── etapa_EDA_segundoDataset.ipynb      # Notebook con análisis exploratorio
-│   └── definicion_churn.ipynb              # Análisis y definición de churn
+├── datos/                         # Repositorio de Datos
+│   ├── data_ecommerce_customer_churn.csv   # Dataset original sin procesar
+│   └── dataset_ecommerce_limpio.csv        # Dataset limpio preparado para modelos
 │
-├── modelos/
-│   ├── modelos_XGBoost.ipynb               # Notebook del modelo XGBoost
-│   └── Modelo_k_Nearest_Neighbors.ipynb    # Notebook del modelo KNN
+├── EDA/                           # Análisis Exploratorio de Datos
+│   ├── etapa_EDA_segundoDataset.ipynb      # Notebook principal de EDA
+│   └── definicion_churn.ipynb              # Notebook de definición y análisis de Churn
 │
-├── graficos/
-│   ├── graph2.png                          # Visualizaciones generadas
-│   └── hist1.png                           # Histogramas
+├── modelos/                       # Desarrollo y Entrenamiento de Modelos
+│   ├── modelos_XGBoost.ipynb               # Notebook de experimentación XGBoost
+│   └── Modelo_k_Nearest_Neighbors.ipynb    # Notebook de experimentación KNN
 │
-├── app.py                                   # Dashboard interactivo (Streamlit)
-├── final_model.sav                          # Modelo XGBoost entrenado
-├── modelo_knn_churn_final.pkl              # Modelo KNN entrenado
-├── scaler_knn_churn.pkl                    # Scaler para el modelo KNN
-├── umbral_optimo_knn.pkl                   # Umbral óptimo para KNN
-├── features_knn_churn.pkl                  # Features usados en KNN
-└── README.md                                # Documentación del proyecto
+├── app.py                         # (Legacy) Versión anterior del dashboard
+├── DOCUMENTACION_DEL_PROYECTO.md  # Documentación detallada del proyecto
+└── README.md                      # Este archivo (Documentación general)
 ```
 
 ## Dataset
